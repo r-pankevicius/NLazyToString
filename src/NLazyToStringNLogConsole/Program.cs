@@ -1,23 +1,10 @@
 ﻿using NLog;
 using System;
 using System.Diagnostics;
+using static NLazyToString.LazyToString;
 
 namespace NLazyToStringNLogConsole
 {
-    internal struct LazyToString
-    {
-        private readonly Func<string> _toStringFunc;
-
-        public LazyToString(Func<string> toStringFunc)
-        {
-            _toStringFunc = toStringFunc ?? throw new ArgumentNullException(nameof(toStringFunc));
-        }
-
-        public override string ToString() => _toStringFunc();
-
-        public static LazyToString Wrap(Func<string> toStringFunc) => new(toStringFunc);
-    }
-
     internal static class Program
     {
         private const int LoopCounter = 1_000_000;
@@ -52,7 +39,7 @@ namespace NLazyToStringNLogConsole
             using (var chronometer = new Chronometer("LazyToString loop"))
             {
                 for (int i = 0; i < LoopCounter; i++)
-                    Logger.Debug(LazyToString.Wrap(() => $"Gaidys dbg {i} {LongString}"));
+                    Logger.Debug(LazyString(() => $"Gaidys dbg {i} {LongString}"));
             }
         }
 
