@@ -39,6 +39,10 @@ About 5 times faster in simple cases:
 
 ## Overhead when string formatting is needed, indeed.
 ```
-TODO
+TODO, expect no more that direct function call vs function pointer call (C), virtual method call in C++.
 ```
 
+## ...Some thoughts about future
+Built-in support in loggers for this concept.
+Then async support in loggers is easy to implement. (await Logger.DebugAsync()).
+await string.FormatAsync("...{await device.GetInfo()}...) from MSFT.
