@@ -44,5 +44,7 @@ TODO, expect no more that direct function call vs function pointer call (C), vir
 
 ## ...Some thoughts about future
 Built-in support in loggers for this concept.
+
 Then async support in loggers is easy to implement. (await Logger.DebugAsync()).
+
 await string.FormatAsync("...{await device.GetInfo()}...) from MSFT.
