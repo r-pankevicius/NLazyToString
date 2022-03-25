@@ -8,7 +8,7 @@ Lazy evaluated ToString() string formatting for use in logging when you don't kn
 By being lazy and creative. Instead of passing a formatted string to a logger...
 Wait! "passing a formatted string to a logger" - so you formatted it before passing to the logger?
 So, you did:
-```
+```csharp
 Logger.Debug($"Detected a new bluetooth device in range: {device.GetInfo()}");
 ```
 Logger in production most likely is configured at Info level, so it will not log that string you passed.
@@ -17,6 +17,14 @@ You'd like it to be called only if logging level is set to debug when troublesho
 but not in "all is fine Sun is shinning" mode.
 
 So, instead of passing a formatted string you may pass an [magic object](./src/NLazyToString/LazyToString.cs) to the Logger.Debug(...).
+
+So do like this, instead:
+```csharp
+using static NLazyToString.LazyToString;
+// ...
+Logger.Debug(LazyString(() => $"Detected a new bluetooth device in range: {device.GetInfo()}"));
+```
+Not so much different, but ```device.GetInfo()``` will get called only if needed, in debug log mode, 0.0001%.
 
 ## Performance when string formatting is not needed
 About 5 times faster in simple cases:
