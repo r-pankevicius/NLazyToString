@@ -9,7 +9,7 @@ namespace NLazyToStringNLogConsole
     {
         private const int LoopCounter = 1_000_000;
 
-        private static string LongString = new('9', 80);
+        private static string LongString = new('9', 20);
         private static readonly ILogger Logger= LogManager.GetCurrentClassLogger();
 
         static Program()
