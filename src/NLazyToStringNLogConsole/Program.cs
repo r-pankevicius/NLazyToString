@@ -9,7 +9,7 @@ namespace NLazyToStringNLogConsole
     {
         private const int LoopCounter = 1_000_000;
 
-        private static string LongString = new('9', 20);
+        private static readonly string LongString = new('9', 20);
         private static readonly ILogger Logger= LogManager.GetCurrentClassLogger();
 
         static Program()
@@ -24,23 +24,82 @@ namespace NLazyToStringNLogConsole
 
         static void Main(string[] args)
         {
+            TestWhenInterpolationIsNotNeeded();
+            TestWhenInterpolationIsNeeded();
+        }
+
+        private static void TestWhenInterpolationIsNotNeeded()
+        {
+            Console.WriteLine("Testing savings when interpolation is not needed...");
+
+            long ticksInterpolate, ticksFormat, ticksLazyString;
+            var logger = Logger;
+
             using (var chronometer = new Chronometer("Interpolate loop"))
             {
                 for (int i = 0; i < LoopCounter; i++)
-                    Logger.Debug($"Gaidys dbg {i} {LongString}");
+                    logger.Debug($"Gaidys dbg {i} {LongString}");
+                ticksInterpolate = chronometer.ElapsedTicks;
             }
 
             using (var chronometer = new Chronometer("string.Format loop"))
             {
                 for (int i = 0; i < LoopCounter; i++)
-                    Logger.Debug(string.Format("Gaidys dbg {0} {1}", i, LongString));
+                    logger.Debug(string.Format("Gaidys dbg {0} {1}", i, LongString));
+                ticksFormat = chronometer.ElapsedTicks;
             }
 
             using (var chronometer = new Chronometer("LazyToString loop"))
             {
                 for (int i = 0; i < LoopCounter; i++)
-                    Logger.Debug(LazyString(() => $"Gaidys dbg {i} {LongString}"));
+                    logger.Debug(LazyString(() => $"Gaidys dbg {i} {LongString}"));
+                ticksLazyString = chronometer.ElapsedTicks;
             }
+
+            Console.WriteLine();
+            Console.WriteLine($"Ticks: interpolate={ticksInterpolate}, format={ticksFormat}, {nameof(LazyString)}={ticksLazyString}");
+            Console.WriteLine();
+            Console.WriteLine($"{nameof(LazyString)} was faster than interpolate {(double)ticksInterpolate / ticksLazyString} times.");
+            Console.WriteLine();
+            Console.WriteLine($"{nameof(LazyString)} was faster than format {(double)ticksFormat / ticksLazyString} times.");
+            Console.WriteLine();
+        }
+
+        private static void TestWhenInterpolationIsNeeded()
+        {
+            Console.WriteLine("Testing overhead when interpolation is needed...");
+
+            long ticksInterpolate, ticksFormat, ticksLazyString;
+            var logger = new FakeLogger();
+
+            using (var chronometer = new Chronometer("Interpolate loop"))
+            {
+                for (int i = 0; i < LoopCounter; i++)
+                    logger.Debug($"Gaidys dbg {i} {LongString}");
+                ticksInterpolate = chronometer.ElapsedTicks;
+            }
+
+            using (var chronometer = new Chronometer("string.Format loop"))
+            {
+                for (int i = 0; i < LoopCounter; i++)
+                    logger.Debug(string.Format("Gaidys dbg {0} {1}", i, LongString));
+                ticksFormat = chronometer.ElapsedTicks;
+            }
+
+            using (var chronometer = new Chronometer("LazyToString loop"))
+            {
+                for (int i = 0; i < LoopCounter; i++)
+                    logger.Debug(LazyString(() => $"Gaidys dbg {i} {LongString}"));
+                ticksLazyString = chronometer.ElapsedTicks;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"Ticks: interpolate={ticksInterpolate}, format={ticksFormat}, {nameof(LazyString)}={ticksLazyString}");
+            Console.WriteLine();
+            Console.WriteLine($"{nameof(LazyString)} was slower than interpolate {(double)ticksLazyString / ticksInterpolate} times.");
+            Console.WriteLine();
+            Console.WriteLine($"{nameof(LazyString)} was slower than format {(double)ticksLazyString / ticksFormat } times.");
+            Console.WriteLine();
         }
 
         private sealed class Chronometer : IDisposable
@@ -55,10 +114,23 @@ namespace NLazyToStringNLogConsole
                 Logger.Info($"{_episode} start");
             }
 
+            public long ElapsedTicks => _stopWatch.ElapsedTicks;
+
             public void Dispose()
             {
                 _stopWatch.Stop();
                 Logger.Info($"{_episode} end, took {_stopWatch.Elapsed}");
+            }
+        }
+
+        private sealed class FakeLogger
+        {
+            internal void Debug(string str) { SimulateLog(str); }
+
+            internal void Debug(object obj) { SimulateLog(obj?.ToString()); }
+
+            private void SimulateLog(string str)
+            {
             }
         }
     }
