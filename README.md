@@ -26,20 +26,42 @@ Logger.Debug(LazyString(() => $"Detected a new bluetooth device in range: {devic
 ```
 Not so much different, but ```device.GetInfo()``` will get called only if needed, in debug log mode, 0.0001%.
 
-## Performance when string formatting is not needed
-About 5 times faster in simple cases:
+## Performance when string formatting is not needed (most often)
+More than 5 times faster in simple cases:
 ```
-2022-03-25 22:38:00.2946|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
-2022-03-25 22:38:00.4360|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.1423859
-2022-03-25 22:38:00.4360|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
-2022-03-25 22:38:00.5648|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.1286627
-2022-03-25 22:38:00.5648|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
-2022-03-25 22:38:00.5898|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.0247922
+Testing savings when interpolation is not needed...
+
+2022-03-30 00:08:05.1166|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
+2022-03-30 00:08:05.2314|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.1158644
+2022-03-30 00:08:05.2314|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
+2022-03-30 00:08:05.3299|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.0981678
+2022-03-30 00:08:05.3299|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
+2022-03-30 00:08:05.3435|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.0129966
+
+Ticks: interpolate=1157059, format=981674, LazyString=129962
+
+LazyString was faster than interpolate 8.90305627798895 times.
+
+LazyString was faster than format 7.5535464212616 times.
 ```
 
-## Overhead when string formatting is needed, indeed.
+## Overhead when string formatting is needed, indeed (in rare cases)
+Less than 20% overhead:
 ```
-TODO, expect no more that direct function call vs function pointer call (C), virtual method call in C++.
+Testing overhead when interpolation is needed...
+
+2022-03-30 00:11:38.6567|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
+2022-03-30 00:11:38.7621|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.1030176
+2022-03-30 00:11:38.7621|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
+2022-03-30 00:11:38.8602|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.0979643
+2022-03-30 00:11:38.8602|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
+2022-03-30 00:11:38.9679|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.1074170
+
+Ticks: interpolate=1030171, format=979636, LazyString=1074163
+
+LazyString was slower than interpolate 1.042703589986517 times.
+
+LazyString was slower than format 1.0964919623206988 times.
 ```
 
 ## ...Some thoughts about future
@@ -47,4 +69,4 @@ Built-in support in loggers for this concept.
 
 Then async support in loggers is easy to implement. (await Logger.DebugAsync()).
 
-await string.FormatAsync("...{await device.GetInfo()}...) from MSFT.
+await string.FormatAsync("...{device.GetInfoAsync()}...) from MSFT.

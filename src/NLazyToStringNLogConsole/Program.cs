@@ -31,6 +31,7 @@ namespace NLazyToStringNLogConsole
         private static void TestWhenInterpolationIsNotNeeded()
         {
             Console.WriteLine("Testing savings when interpolation is not needed...");
+            Console.WriteLine();
 
             long ticksInterpolate, ticksFormat, ticksLazyString;
             var logger = Logger;
@@ -68,6 +69,7 @@ namespace NLazyToStringNLogConsole
         private static void TestWhenInterpolationIsNeeded()
         {
             Console.WriteLine("Testing overhead when interpolation is needed...");
+            Console.WriteLine();
 
             long ticksInterpolate, ticksFormat, ticksLazyString;
             var logger = new FakeLogger();
