@@ -31,37 +31,37 @@ More than 5 times faster in simple cases:
 ```
 Testing savings when interpolation is not needed...
 
-2022-03-30 00:08:05.1166|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
-2022-03-30 00:08:05.2314|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.1158644
-2022-03-30 00:08:05.2314|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
-2022-03-30 00:08:05.3299|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.0981678
-2022-03-30 00:08:05.3299|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
-2022-03-30 00:08:05.3435|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.0129966
+2022-04-05 22:06:25.7814|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
+2022-04-05 22:06:25.8928|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.1123801
+2022-04-05 22:06:25.8928|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
+2022-04-05 22:06:25.9892|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.0959689
+2022-04-05 22:06:25.9892|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
+2022-04-05 22:06:25.9892|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.0109420
 
-Ticks: interpolate=1157059, format=981674, LazyString=129962
+Ticks: interpolate=1122287, format=959684, LazyString=109419
 
-LazyString was faster than interpolate 8.90305627798895 times.
+LazyString was faster than interpolate 10.2567835567863 times.
 
-LazyString was faster than format 7.5535464212616 times.
+LazyString was faster than format 8.77072537676272 times.
 ```
 
 ## Overhead when string formatting is needed, indeed (in rare cases)
-Less than 20% overhead:
+Less than 20% (1/5) overhead:
 ```
 Testing overhead when interpolation is needed...
 
-2022-03-30 00:11:38.6567|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
-2022-03-30 00:11:38.7621|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.1030176
-2022-03-30 00:11:38.7621|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
-2022-03-30 00:11:38.8602|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.0979643
-2022-03-30 00:11:38.8602|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
-2022-03-30 00:11:38.9679|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.1074170
+2022-04-05 22:06:25.9892|INFO|NLazyToStringNLogConsole.Program|Interpolate loop start
+2022-04-05 22:06:26.1018|INFO|NLazyToStringNLogConsole.Program|Interpolate loop end, took 00:00:00.0983547
+2022-04-05 22:06:26.1018|INFO|NLazyToStringNLogConsole.Program|string.Format loop start
+2022-04-05 22:06:26.1971|INFO|NLazyToStringNLogConsole.Program|string.Format loop end, took 00:00:00.0951963
+2022-04-05 22:06:26.1971|INFO|NLazyToStringNLogConsole.Program|LazyToString loop start
+2022-04-05 22:06:26.3051|INFO|NLazyToStringNLogConsole.Program|LazyToString loop end, took 00:00:00.1078384
 
-Ticks: interpolate=1030171, format=979636, LazyString=1074163
+Ticks: interpolate=983542, format=951960, LazyString=1078376
 
-LazyString was slower than interpolate 1.042703589986517 times.
+LazyString was slower than interpolate 1.0964208950914145 times.
 
-LazyString was slower than format 1.0964919623206988 times.
+LazyString was slower than format 1.1327954956090591 times.
 ```
 
 ## ...Some thoughts about future

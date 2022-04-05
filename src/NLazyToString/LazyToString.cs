@@ -15,31 +15,29 @@ namespace NLazyToString
         /// ctor
         /// </summary>
         /// <param name="toStringFunc">Function that returns a formatted string.</param>
-        /// <exception cref="ArgumentNullException">If <paramref name="toStringFunc"/>is null.</exception>
         public LazyToString(Func<string> toStringFunc)
         {
-#if DEBUG
-            _toStringFunc = toStringFunc ?? throw new ArgumentNullException(nameof(toStringFunc));
-#else
             _toStringFunc = toStringFunc;
-#endif
         }
 
         /// ///<inheritdoc/>
         public override string ToString()
         {
-#if DEBUG
-            return _toStringFunc();
-#else
-            return _toStringFunc is not null ? _toStringFunc() : string.Empty;
-#endif        
+            if (_toStringFunc is null)
+                return $"PROGRAMMER'S ERROR: passed null function to {nameof(LazyToString)} constructor.";
+
+            string functionResult = _toStringFunc();
+
+            // null arg is formatted as the empty string
+            return functionResult ?? string.Empty;
         }
 
         /// <summary>
         /// Convienence method.
         /// </summary>
         /// <param name="toStringFunc">Function that returns a formatted string.</param>
-        /// <returns>Formatted string.</returns>
+        /// <returns><see cref="LazyToString"/> that will call <paramref name="toStringFunc"/>
+        /// to return string when asked.</returns>
         public static LazyToString LazyString(Func<string> toStringFunc) => new(toStringFunc);
     }
 }
