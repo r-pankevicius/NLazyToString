@@ -5,7 +5,7 @@ using System;
 namespace NLazyToString
 {
     /// <summary>
-    /// Encapsulates a function pointer that yields string when asked.
+    /// Encapsulates a function pointer that yields a string when <see cref="ToString()"/> will be called (and only then, not before).
     /// </summary>
     public struct LazyToString
     {
@@ -20,7 +20,10 @@ namespace NLazyToString
             _toStringFunc = toStringFunc;
         }
 
-        /// ///<inheritdoc/>
+        /// <summary>
+        /// Framework metod, you sould know it.
+        /// </summary>
+        /// <returns>Formatted string, whatever the funcion you passed to the constructor returns.</returns>
         public override string ToString()
         {
             if (_toStringFunc is null)
@@ -28,7 +31,7 @@ namespace NLazyToString
 
             string functionResult = _toStringFunc();
 
-            // null arg is formatted as the empty string
+            // Convenience: null is formatted as the empty string in string.Format() and interpolation
             return functionResult ?? string.Empty;
         }
 
