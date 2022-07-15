@@ -1,6 +1,9 @@
 # NLazyToString
 Lazy evaluated ToString() string formatting for use in logging when you don't know in advance if you need to format that string at all.
 
+## YAGNI warning
+[You ain't gonna need it](https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it) if you use [NLog](https://nlog-project.org/) because it has the variants for log methods accepting [LogMessageGenerator](https://nlog-project.org/documentation/v4.0.0/html/T_NLog_LogMessageGenerator.htm) delegate. This achieves exactly the same.
+
 ## It solves: How much debugging log can I add to my program?
  The answer is: **Add as much as you can**. **No performance penalties, almost**.
 
